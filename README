@@ -1,0 +1,3 @@
+Some node functions for interrogating the JSON that underlies Daylight Smart Forms.
+
+This code is intended to be illustrative. Moreover, this JSON structure is an internal API and subject to change. Tread carefully.

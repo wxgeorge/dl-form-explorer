@@ -1,0 +1,18 @@
+{
+  "name": "fh-form-explorer",
+  "version": "1.0.0",
+  "description": "Javascript API for interacting with form structure (think question labels and picklist options)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wesley George",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "axios": "^0.25.0",
+    "jmespath": "^0.16.0"
+  }
+}
