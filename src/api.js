@@ -11,8 +11,6 @@ function apiFactory({ protocol = 'https://', servicesPrefix = 'services', domain
       },
     }
 
-    console.log(`Requesting ${config.url}`)
-
     return axios(config).then(r => r.data)
   };
 
