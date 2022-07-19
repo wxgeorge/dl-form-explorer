@@ -1,7 +1,7 @@
 {
-  "name": "fh-form-explorer",
+  "name": "@dcs/schema-tools",
   "version": "1.0.0",
-  "description": "Javascript API for interacting with form structure (think question labels and picklist options)",
+  "description": "Tools for interacting with Daylight Smart Form schema (think question labels and picklist options)",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -16,5 +16,24 @@
     "docopt": "^0.6.2",
     "jmespath": "^0.16.0",
     "js-beautify": "^1.14.4"
-  }
+  },
+  "bin": {
+    "get-js": "bin/get-js",
+    "get-schema": "bin/get-schema"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wxgeorge/dcs-schema-tools.git"
+  },
+  "keywords": [
+    "Daylight Automation",
+    "Schema",
+    "Smart Form",
+    "Form Development",
+  ],
+  "bugs": {
+    "url": "https://github.com/wxgeorge/dcs-schema-tools/issues"
+  },
+  "homepage": "https://github.com/wxgeorge/dcs-schema-tools#readme"
 }
