@@ -7,12 +7,11 @@ Usage:
 const { docopt } = require ('docopt')
 
 const options = docopt(doc)
+const domain = options['<host>'] || process.env.DL_CLOUD_HOST || 'formhero.cloud'
 
 const buildApi = () => {
 	const dlApiFactory = require(`${__dirname}/../src/api`)
-	const apiConfig = {}
-	apiConfig.domain = options['<host>'] || process.env.DL_CLOUD_HOST || 'formhero.cloud'
-	return dlApiFactory(apiConfig)
+	return dlApiFactory({domain})
 }
 
 const fqFormSlug = options['<fq_form_slug>']
@@ -29,5 +28,5 @@ api.getPublishedCuid(organization, team, form)
 	.then(cuid => api.getRawFormData(cuid))
 	.then(form => {
 		const formJSFormatter = require(`${__dirname}/../src/js-formatter`)
-		console.log(formJSFormatter(form))
+		console.log(formJSFormatter(form, domain))
 	})
