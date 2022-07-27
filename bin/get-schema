@@ -1,32 +1,3 @@
-#!/usr/bin/env node
-const doc = Object.freeze(`
-Usage:
-	get-schema <fq_form_slug>
-`)
+#!/bin/bash
 
-const { docopt } = require ('docopt')
-
-function buildApi() {
-	const dlApiFactory = require(`${__dirname}/../src/api`)
-	const apiConfig = {}
-	if(process.env.DL_CLOUD_HOST) {
-		apiConfig.domain = process.env.DL_CLOUD_HOST
-	}
-	return dlApiFactory(apiConfig)
-}
-
-const options = docopt(doc)
-
-const fqFormSlug = options['<fq_form_slug>']
-if(/(.+)\/(.+)\/(.+)/.exec(fqFormSlug) == null) {
-	console.error(`fq-form-slug (${fqFormSlug}) is malformed.`)
-	console.error("format expected is organization/team/slug")
-	process.exit(1)
-}
-
-const [ organization, team, form ] = fqFormSlug.split('/')
-
-const api = buildApi()
-api.getPublishedCuid(organization, team, form)
-	.then(cuid => api.getRawFormData(cuid))
-	.then(form => console.log(JSON.stringify(form)))
+echo "This command has been replaced. Please use dst get-schema instead"

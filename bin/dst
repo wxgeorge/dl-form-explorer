@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+const doc = Object.freeze(`
+Usage:
+	dst get-js <fq_form_slug> [--host=<host>]
+	dst get-schema <fq_form_slug> [--host=<host>]
+	dst bindings <fq_form_slug> [--host=<host>]
+`)
+
+const { docopt } = require ('docopt')
+
+const REPO_ROOT = Object.freeze(`${__dirname}/..`)
+
+const options = docopt(doc)
+const domain = options['<host>'] || process.env.DL_CLOUD_HOST || 'formhero.cloud'
+
+const buildApi = () => {
+	const dlApiFactory = require(`${REPO_ROOT}/src/api`)
+	return dlApiFactory({domain})
+}
+
+const fqFormSlug = options['<fq_form_slug>']
+if(/(.+)\/(.+)\/(.+)/.exec(fqFormSlug) == null) {
+	console.error(`fq-form-slug (${fqFormSlug}) is malformed.`)
+	console.error("format expected is organization/team/slug")
+	process.exit(1)
+}
+
+const [ organization, team, form ] = fqFormSlug.split('/')
+
+const api = buildApi()
+
+if(options['get-js']) {
+	api.getPublishedCuid(organization, team, form)
+		.then(cuid => api.getRawFormData(cuid))
+		.then(form => {
+			const formJSFormatter = require(`${REPO_ROOT}/src/js-formatter`)
+			console.log(formJSFormatter(form, domain))
+		})
+		.catch(e => console.error(e))
+} else if(options['get-schema']) {
+	api.getPublishedCuid(organization, team, form)
+	.then(cuid => api.getRawFormData(cuid))
+	.then(form => console.log(JSON.stringify(form)))
+} else if(options['bindings']) {
+	api.getPublishedCuid(organization, team, form)
+		.then(cuid => api.getRawFormData(cuid))
+	  .then(schema => {
+				const wrapSchema = require(`${REPO_ROOT}/src/parser`)
+
+	      let sp = wrapSchema(schema)
+	      let allBindingNames = sp.allBindingNames()
+	      // console.log(allBindingNames)
+	      console.log('"Binding Name","type","label"')
+	      allBindingNames.forEach(n => {
+	        // console.log(`Pulling context for ${n}`);
+	        // console.log(sp.bindingContext(n))
+	        sp.bindingContext(n).forEach(bindingCtx => {
+	          console.log(`${n},${bindingCtx.type},${bindingCtx.label.en}`)
+	        })
+	      })
+	    })
+	  .catch(e => console.log(e))
+}
+
