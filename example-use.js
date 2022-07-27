@@ -1,18 +1,18 @@
-console.log(module.paths)
+const apiFactory = require('./src/api')
+const wrapSchema = require('./src/parser')
 
 let {
   getPublishedCuid,
   getRawFormData
-} = require('./src/api')()
-const wrapSchema = require('./src/parser')
+} = apiFactory({ domain: 'sit-eforms.loblaw.ca' })
 
 // All forms have a cuid.
 // Often when we talk about a form, we're referring to the latest published
 // version. The line below can retrieve that.
 let cuidGetter = getPublishedCuid(
   'shoppers-drug-mart',
-  'minor-ailments',
-  'allergic-rhinitis'
+  'covid',
+  'ab-care-plan-2.0'
 )
 
 // Older versions can be retrieved by querying their cuid directly.
@@ -25,8 +25,15 @@ cuidGetter.then(cuid => {
     then(schema => {
       let sp = wrapSchema(schema)
       let allBindingNames = sp.allBindingNames()
-      console.log(allBindingNames)
-      allBindingNames.forEach(n => { console.log(`Pulling context for ${n}`); console.log(sp.bindingContext(n)) })
+      // console.log(allBindingNames)
+      console.log('"Binding Name","type","label"')
+      allBindingNames.forEach(n => {
+        // console.log(`Pulling context for ${n}`);
+        // console.log(sp.bindingContext(n))
+        sp.bindingContext(n).forEach(bindingCtx => {
+          console.log(`${n},${bindingCtx.type},${bindingCtx.label.en}`)
+        })
+      })
     }).
     catch(e => console.log(e))
 }).catch((e) => {
